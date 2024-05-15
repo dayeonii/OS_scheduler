@@ -6,6 +6,7 @@ package process;
  */
 
 public class process {
+<<<<<<< Updated upstream
     private int pid;
     private int arrivalTime;
     private int burstTime;
@@ -48,4 +49,9 @@ public class process {
     public static process createProcess(int pid, int arrivalTime, int burstTime, int priority) {
         return new process(pid, arrivalTime, burstTime, priority);
     }
+=======
+	public static void main() {
+		
+	}
+>>>>>>> Stashed changes
 }
