@@ -1,4 +1,3 @@
-package scheduler;
 
 class process {
 	public int PID;
