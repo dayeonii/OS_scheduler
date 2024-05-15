@@ -6,5 +6,4 @@ import process.*;
 public class fcfs {
     //도착 순서대로 저장할 큐
 
-
 }
