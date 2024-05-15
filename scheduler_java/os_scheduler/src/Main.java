@@ -1,5 +1,7 @@
 /*  프로그램을 실행할 메인 클래스    */
 import process.*;
+import fcfs.*;
+import sjf.*;
 import java.util.*;
 public class Main {
     public static void main(String[] args) {
@@ -18,8 +20,13 @@ public class Main {
         System.out.println("p1의 정보\n"+p1);
         System.out.println("p2의 정보\n"+p2);
         System.out.println("p3의 정보\n"+p3);
+        System.out.println();
 
+        //fcfs 함수 테스트
+        fcfs.fcfs(PCB_list);
 
+        //sjf 함수 테스트 - 아현이가 push한거 pull해서 실행 테스트
+        np_sjf.np_sjf();
 
     }
 }
