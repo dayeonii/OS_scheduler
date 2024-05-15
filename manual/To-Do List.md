@@ -6,9 +6,10 @@
 |----|-----|------|----|
 |process class|--|--|--|
 |fcfs class|--|--|--|
-|정책 1 class|--|--|--|
-|정책 2 class|--|--|--|
-|정책 3 class|--|--|--|
+|non-preemptive sjf class|--|--|--|
+|srtf (preemptive) class|--|--|--|
+|priority (hrrn) class|--|--|--|
+|round robin class|--|--|--|
 |Main class|--|--|--|
 |GUI 만들기|--|--|--|
 |실행 테스트|--|--|--|
