@@ -1,4 +1,4 @@
-/*  round robin     */
+/*  round-robin     */
 package roundrobin;
 
 public class roundrobin {

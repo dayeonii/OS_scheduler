@@ -1,4 +1,4 @@
-/*  preemptive sjf => srtf  */
+/*  preemptive sjf = srtf   */
 package srtf;
 
 public class srtf {

@@ -28,8 +28,8 @@ public class Main {
         //fcfs 함수 테스트
         fcfs.fcfs(PCB_list);
 
-        //sjf 함수 테스트 - 아현이가 push한거 pull해서 실행 테스트
-        sjf.sjf();
+        //sjf 함수 테스트
+        sjf.sjf(PCB_list);
 
         //srtf 함수 테스트
         srtf.srtf();
