@@ -34,7 +34,7 @@ public class Main {
         //System.out.println("p1의 정보\n"+p1);
 
         //srtf 함수 테스트
-        srtf.srtf();
+        srtf.srtf(PCB_list);
 
         //round robin 함수 테스트
         roundrobin.roundrobin();
