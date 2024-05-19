@@ -36,6 +36,20 @@ public class process {
         this.priority = priority;
     }
 
+    //복사 생성자
+    public process(process original) {
+        this.pid = original.pid;
+        this.arrivalTime = original.arrivalTime;
+        this.burstTime = original.burstTime;
+        this.priority = original.priority;
+    }
+
+    //깊은 복사를 위한 clone 메소드
+    @Override
+    public Object clone() {
+        return new process(this);
+    }
+
     // Process 정보 출력
     @Override
     public String toString() {

@@ -3,15 +3,18 @@
 package sjf;
 
 import java.util.*;
-
 import process.*;
+import java.lang.Object;
 
 public class sjf {
     public static void sjf(ArrayList<process> PCB_list){
         System.out.println("Hello, I'm sjf");
 
         //PCB_list를 burstTime 기준으로 오름차순 정렬하기 (실행시간 짧은 것 부터 실행)
-        ArrayList<process> sorted_PCB = new ArrayList<process>(PCB_list); //원본 복사
+        ArrayList<process> sorted_PCB = new ArrayList<process>(); //원본 복사 (깊은 복사를 해야 원본 변경이 안됨)
+        for(process P : PCB_list) {
+            sorted_PCB.add((process)P.clone());
+        }
         Collections.sort(sorted_PCB, new Comparator<process>(){ //정렬
             @Override
             public int compare(process p1, process p2){
