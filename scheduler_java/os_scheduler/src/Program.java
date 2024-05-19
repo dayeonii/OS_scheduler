@@ -185,9 +185,6 @@ public class Program extends JFrame {
             super.paintComponent(g);
             int x = 10; // 초기 x 좌표
 
-            // 첫 시간 0 표시
-            g.drawString("0", x, 70);
-
             for (ProcessBlock process : processes) {
                 int width = process.duration * 20; // 프로세스 블록의 너비
                 g.setColor(Color.YELLOW);
