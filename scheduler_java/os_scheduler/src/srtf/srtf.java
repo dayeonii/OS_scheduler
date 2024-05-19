@@ -51,6 +51,7 @@ public class srtf {
             // 시간 1단위 증가
             currentTime++;
         }
+        System.out.println("----------------------------");
     }
 
     // 프로세스 상태를 관리하기 위한 내부 클래스
