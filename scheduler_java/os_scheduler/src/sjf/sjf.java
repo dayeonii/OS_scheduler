@@ -22,10 +22,14 @@ public class sjf {
             }
         });
 
+        //대기시간을 구하는데 사용될 원본 실행시간 저장
+        HashMap<Integer, Integer> originBurstTime = new HashMap<>();
+
         //ready queue에 프로세스 넣기
         Queue<process> readyQ = new LinkedList<process>();
         for(process P : sorted_PCB) {
             readyQ.offer(P);
+            originBurstTime.put(P.getPid(), P.getBurstTime());
         }
 
         //오름차순 정렬됐는지 출력 -> 완료!
@@ -34,6 +38,8 @@ public class sjf {
 
         //readyQ에서 꺼내와서 순서대로 작업하기
         int cpuTime = 0;    //cpu 실행시간 (진행시간)
+        int totalWaitingTime = 0;   //총 대기시간 (프로세스 개수로 나누면 avg)
+        HashMap<Integer, Integer> waitingTimes = new HashMap<>();   //프로세스별로 대기시간 저장
         process runningProcess = null;  //현재 실행중인 프로세스
 
         while(!readyQ.isEmpty() || runningProcess!=null) {  //Q를 다 비울때까지 (=모든 프로세스가 실행을 완료)
@@ -42,7 +48,10 @@ public class sjf {
                 System.out.println("현재 실행중 프로세스:"+runningProcess.getPid()+" | 남은 burstTime: "+runningProcess.getBurstTime());
                 runningProcess.setBurstTime(runningProcess.getBurstTime()-1);   //실행중인 프로세스 burstTime 감소
                 if(runningProcess.getBurstTime()==0) {
-                    System.out.println("프로세스 "+runningProcess.getPid()+"번이 완료됨\n");
+                    int waitTime = cpuTime-runningProcess.getBurstTime()-originBurstTime.get(runningProcess.getPid());
+                    totalWaitingTime += waitTime;
+                    waitingTimes.put(runningProcess.getPid(), waitTime);
+                    System.out.println("프로세스 "+runningProcess.getPid()+"번이 완료됨 | 대기시간: "+waitTime);
                     runningProcess = null;
                 }
             }
@@ -55,6 +64,18 @@ public class sjf {
             cpuTime++;
         }
 
+        //각 프로세스별 결과 출력
+        System.out.println("프로세스 ID | 실행 시간 | 대기 시간");
+        for(process P : PCB_list) {
+            System.out.println(P.getPid()+" | "+originBurstTime.get(P.getPid())+" | "+waitingTimes.get(P.getPid()));
+        }
+        //평균 대기시간 출력
+        System.out.println("Avg waiting time: "+totalWaitingTime/ PCB_list.size());
+
         System.out.println("----------------------------");
+    }
+
+    private void getOriginBurstTime(){
+
     }
 }
