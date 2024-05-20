@@ -72,7 +72,7 @@ public class sjf {
                 System.out.println("현재 실행중 프로세스:"+runningProcess.getPid()+" | 남은 burstTime: "+runningProcess.getBurstTime());
                 runningProcess.setBurstTime(runningProcess.getBurstTime()-1);   //실행중인 프로세스 burstTime 감소
                 if(runningProcess.getBurstTime()==0) {
-                    int waitTime = cpuTime-runningProcess.getArrivalTime()-originBurstTime.get(runningProcess.getPid()+1);
+                    int waitTime = cpuTime-runningProcess.getArrivalTime()-originBurstTime.get(runningProcess.getPid())+1;
                     totalWaitingTime += waitTime;
                     waitingTimes.put(runningProcess.getPid(), waitTime);
                     System.out.println("프로세스 "+runningProcess.getPid()+"번이 완료됨");
