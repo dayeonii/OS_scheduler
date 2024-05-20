@@ -48,6 +48,8 @@ public class srtf {
                 if (currentProcessState.remainingTime == currentProcessState.process.getBurstTime()) {
                     // 처음 시작할 때 대기 시간
                     currentProcessState.waitingTime = currentTime - currentProcessState.process.getArrivalTime();
+                    // 응답 시간 설정
+                    currentProcessState.responseTime = currentTime - currentProcessState.process.getArrivalTime();
                 } else {
                     // 선점 이후 다시 시작할 때 대기 시간
                     currentProcessState.waitingTime += (currentTime - lastExecutedTime[currentProcessState.index]);
@@ -64,7 +66,7 @@ public class srtf {
                     lastProcess = new ProcessState(currentProcessState.process, currentProcessState.index, currentProcessState.remainingTime);
                     lastProcess.startTime = currentTime;
                     lastProcess.duration = 1;
-                    results.add(new SchedulingResult(currentProcessState.process.getPid(), lastProcess.startTime, lastProcess.duration, currentProcessState.waitingTime));
+                    results.add(new SchedulingResult(currentProcessState.process.getPid(), lastProcess.startTime, lastProcess.duration, currentProcessState.waitingTime, currentProcessState.responseTime));
                 }
 
                 // 프로세스가 완료되었는지 확인
@@ -96,6 +98,7 @@ public class srtf {
         int startTime; // 시작 시간
         int duration; // 실행 시간
         int remainingTime; // 남은 실행 시간
+        int responseTime; // 응답 시간
 
         ProcessState(process process, int index, int remainingTime) {
             this.process = process;
@@ -104,6 +107,7 @@ public class srtf {
             this.startTime = -1;
             this.duration = 0;
             this.remainingTime = remainingTime;
+            this.responseTime = -1; // 초기 응답 시간을 -1로 설정
         }
     }
 }
