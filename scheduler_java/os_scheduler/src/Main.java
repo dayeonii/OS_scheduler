@@ -30,8 +30,6 @@ public class Main {
 
         //sjf 함수 테스트
         sjf.sjf(PCB_list);
-        //sjf 실행 후 원본 프로세스들 변경되었는지 확인 -> 깊은복사로 해결
-        //System.out.println("p1의 정보\n"+p1);
 
         //srtf 함수 테스트
         srtf.srtf(PCB_list);
@@ -40,7 +38,7 @@ public class Main {
         roundrobin.roundrobin();
 
         //신규정책 함수 테스트
-        //newScheduler.newScheduler(PCB_list);
+        newScheduler.newScheduler(PCB_list);
 
     }
 }
