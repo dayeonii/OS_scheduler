@@ -32,6 +32,9 @@ public class Program extends JFrame {
     private DefaultTableModel model1;
     private DefaultTableModel model2;
 
+    private JLabel totalExecutionTimeLabel;
+    private JLabel averageWaitingTimeLabel;
+
     private void openFile() {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt");
@@ -51,7 +54,7 @@ public class Program extends JFrame {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(" ");
                 if (parts.length == 4) {
-                    int pid  = Integer.parseInt(parts[0].trim());
+                    int pid = Integer.parseInt(parts[0].trim());
                     int arrivalTime = Integer.parseInt(parts[1].trim());
                     int duration = Integer.parseInt(parts[2].trim());
                     int priority = Integer.parseInt(parts[3].trim());
@@ -62,19 +65,19 @@ public class Program extends JFrame {
             e.printStackTrace();
         }
     }
-    
+
     public void fcfsPerformed(ActionEvent e) {
         executeSchedulingAlgorithm("FCFS");
     }
-    
+
     public void newSchedulerPerformed(ActionEvent e) {
         executeSchedulingAlgorithm("NewScheduler");
     }
-    
+
     public void sjfPerformed(ActionEvent e) {
         executeSchedulingAlgorithm("SJF");
     }
-    
+
     public void srtfPerformed(ActionEvent e) {
         executeSchedulingAlgorithm("SRTF");
     }
@@ -137,11 +140,11 @@ public class Program extends JFrame {
             if (currentResult.getPid() == lastResult.getPid() && currentResult.getStartTime() == lastResult.getStartTime() + lastResult.getDuration()) {
                 // 연속된 실행 시간 병합
                 lastResult = new SchedulingResult(
-                    lastResult.getPid(),
-                    lastResult.getStartTime(),
-                    lastResult.getDuration() + currentResult.getDuration(),
-                    lastResult.getWaitingTime(),
-                    lastResult.getResponseTime()
+                        lastResult.getPid(),
+                        lastResult.getStartTime(),
+                        lastResult.getDuration() + currentResult.getDuration(),
+                        lastResult.getWaitingTime(),
+                        lastResult.getResponseTime()
                 );
             } else {
                 // 병합된 결과 추가
@@ -152,11 +155,21 @@ public class Program extends JFrame {
         // 마지막 결과 추가
         mergedResults.add(lastResult);
 
+        int totalExecutionTime = 0;
+        int totalWaitingTime = 0;
+
         for (SchedulingResult result : mergedResults) {
             model2.addRow(new Object[]{"P" + result.getPid(), result.getDuration(), result.getWaitingTime(), result.getResponseTime()});
+            totalExecutionTime = Math.max(totalExecutionTime, result.getStartTime() + result.getDuration());
+            totalWaitingTime += result.getWaitingTime();
         }
-    }
 
+        int processCount = mergedResults.size();
+        double averageWaitingTime = processCount > 0 ? (double) totalWaitingTime / processCount : 0;
+
+        totalExecutionTimeLabel.setText("전체 실행시간: " + totalExecutionTime);
+        averageWaitingTimeLabel.setText("평균 대기시간: " + String.format("%.2f", averageWaitingTime));
+    }
 
     class GanttChartPanel extends JPanel {
         private ArrayList<ProcessBlock> processes;
@@ -226,46 +239,67 @@ public class Program extends JFrame {
         openFileBtn.addActionListener(e -> openFile());
         add(openFileBtn);
 
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BorderLayout());
+        JLabel inputLabel = new JLabel("입력");
+        inputPanel.add(inputLabel, BorderLayout.NORTH);
+
         model1 = new DefaultTableModel(null, inputHeaders);
         inputTable = new JTable(model1);
         JScrollPane scrollPane1 = new JScrollPane(inputTable);
         scrollPane1.setPreferredSize(new Dimension(650, 200));
-        add(scrollPane1);
-        
+        inputPanel.add(scrollPane1, BorderLayout.CENTER);
+        add(inputPanel);
+
+        JPanel outputPanel = new JPanel();
+        outputPanel.setLayout(new BorderLayout());
+        JLabel outputLabel = new JLabel("출력");
+        outputPanel.add(outputLabel, BorderLayout.NORTH);
+
         model2 = new DefaultTableModel(null, outputHeaders);
         outputTable = new JTable(model2);
         JScrollPane scrollPane2 = new JScrollPane(outputTable);
         scrollPane2.setPreferredSize(new Dimension(650, 200));
-        add(scrollPane2);
-        
+        outputPanel.add(scrollPane2, BorderLayout.CENTER);
+        add(outputPanel);
+
         fcfsBtn = new JButton("FCFS");
         fcfsBtn.addActionListener(e -> fcfsPerformed(e));
         add(fcfsBtn);
-        
+
         newSchedulerBtn = new JButton("NewScheduler");
         newSchedulerBtn.addActionListener(e -> newSchedulerPerformed(e));
         add(newSchedulerBtn);
-        
+
         sjfBtn = new JButton("SJF");
         sjfBtn.addActionListener(e -> sjfPerformed(e));
         add(sjfBtn);
-        
+
         srtfBtn = new JButton("SRTF");
-        srtfBtn.addActionListener(e -> srtfPerformed(e)); 
+        srtfBtn.addActionListener(e -> srtfPerformed(e));
         add(srtfBtn);
-        
+
         rrBtn = new JButton("RR");
         rrBtn.addActionListener(e -> rrPerformed(e));
         add(rrBtn);
 
+        JPanel timeInfoPanel = new JPanel();
+        timeInfoPanel.setLayout(new GridLayout(1, 2));
+
+        totalExecutionTimeLabel = new JLabel("전체 실행시간: ");
+        averageWaitingTimeLabel = new JLabel("평균 대기시간: ");
+        timeInfoPanel.add(totalExecutionTimeLabel);
+        timeInfoPanel.add(averageWaitingTimeLabel);
+        add(timeInfoPanel);
+
         ganttChartPanel = new GanttChartPanel();
-        ganttChartPanel.setPreferredSize(new Dimension(500, 100));
+        ganttChartPanel.setPreferredSize(new Dimension(650, 100));
         add(ganttChartPanel);
 
         setVisible(true);
     }
 
     public static void main(String[] args) {
-        new Program();
+        SwingUtilities.invokeLater(Program::new);
     }
 }
