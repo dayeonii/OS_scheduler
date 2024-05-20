@@ -38,6 +38,7 @@ public class sjf {
         int cpuTime = 0;    //cpu 실행시간 (진행시간)
         int totalWaitingTime = 0;   //총 대기시간 (프로세스 개수로 나누면 avg)
         int startTime = 0;  //해당 프로세스가 시작된 시간
+        int responseTime = 0;   //응답시간
         HashMap<Integer, Integer> waitingTimes = new HashMap<>();   //프로세스별로 대기시간 저장
         process runningProcess = null;  //현재 실행중인 프로세스
 
@@ -45,7 +46,7 @@ public class sjf {
             System.out.print("CPU 실행 시간: "+cpuTime+" | ");
 
             //도착시간이 된 프로세스를 readyQ에 넣기
-            while(!sorted_PCB.isEmpty() && sorted_PCB.get(0).getArrivalTime() <= cpuTime) {
+            while(!sorted_PCB.isEmpty() && sorted_PCB.get(0).getArrivalTime() == cpuTime) {
                 readyQ.offer(sorted_PCB.remove(0));
             }
 
@@ -64,7 +65,9 @@ public class sjf {
 
                 runningProcess = readyQ.poll(); //cpu 올리기
                 startTime = cpuTime;
+                responseTime = startTime - runningProcess.getArrivalTime();
                 System.out.println("프로세스 "+runningProcess.getPid()+"번이 CPU에 올라감 | "+"시작시간: "+startTime);
+                System.out.println("응답시간: "+responseTime);
             }
 
 
