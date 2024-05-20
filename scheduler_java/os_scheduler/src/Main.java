@@ -40,7 +40,7 @@ public class Main {
         roundrobin.roundrobin();
 
         //신규정책 함수 테스트
-        //newScheduler.newScheduler(PCB_list);
+        newScheduler.newScheduler(PCB_list);
 
     }
 }
