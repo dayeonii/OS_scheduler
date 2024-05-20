@@ -27,6 +27,7 @@ public class process {
 
     //각 값을 변경하기 위한 set 함수
     public void setBurstTime(int burstTime) { this.burstTime = burstTime; }
+    public void setPriority(int priority) { this.priority = priority; }
 
     //생성자
     public process(int pid, int arrivalTime, int burstTime, int priority) {
