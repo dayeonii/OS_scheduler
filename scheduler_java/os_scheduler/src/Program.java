@@ -18,7 +18,7 @@ import srtf.*;
 
 public class Program extends JFrame {
     private final String[] inputHeaders = {"프로세스", "도착시간", "실행시간", "우선순위"};
-    private final String[] outputHeaders = {"프로세스", "실행시간", "대기시간"};
+    private final String[] outputHeaders = {"프로세스", "실행시간", "대기시간", "응답시간"};
     private JTable inputTable;
     private JTable outputTable;
     private JButton openFileBtn;
@@ -140,7 +140,8 @@ public class Program extends JFrame {
                     lastResult.getPid(),
                     lastResult.getStartTime(),
                     lastResult.getDuration() + currentResult.getDuration(),
-                    lastResult.getWaitingTime()
+                    lastResult.getWaitingTime(),
+                    lastResult.getResponseTime()
                 );
             } else {
                 // 병합된 결과 추가
@@ -152,7 +153,7 @@ public class Program extends JFrame {
         mergedResults.add(lastResult);
 
         for (SchedulingResult result : mergedResults) {
-            model2.addRow(new Object[]{"P" + result.getPid(), result.getDuration(), result.getWaitingTime()});
+            model2.addRow(new Object[]{"P" + result.getPid(), result.getDuration(), result.getWaitingTime(), result.getResponseTime()});
         }
     }
 
