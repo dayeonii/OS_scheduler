@@ -5,12 +5,14 @@ public class SchedulingResult {
     private int startTime;
     private int duration;
     private int waitingTime;
+    private int responseTime;
 
-    public SchedulingResult(int pid, int startTime, int duration, int waitingTime) {
+    public SchedulingResult(int pid, int startTime, int duration, int waitingTime, int responseTime) {
         this.pid = pid;
         this.startTime = startTime;
         this.duration = duration;
         this.waitingTime = waitingTime;
+        this.responseTime = responseTime;
     }
 
     public int getPid() {
@@ -27,5 +29,9 @@ public class SchedulingResult {
 
     public int getWaitingTime() {
         return waitingTime;
+    }
+
+    public int getResponseTime() {
+        return responseTime;
     }
 }
