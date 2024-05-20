@@ -68,6 +68,7 @@ public class sjf {
                 responseTime = startTime - runningProcess.getArrivalTime();
                 System.out.println("프로세스 "+runningProcess.getPid()+"번이 CPU에 올라감 | "+"시작시간: "+startTime);
                 System.out.println("응답시간: "+responseTime);
+
             }
 
 
