@@ -91,7 +91,7 @@ public class newScheduler {
             cpuTime++;
         }
 
-        System.out.println("----------------------------");
+        System.out.println("-----------------------------");
         return new_result;
     }
 
