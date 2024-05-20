@@ -105,7 +105,7 @@ public class Program extends JFrame {
                 // results = newScheduler.newScheduler(processes);
                 break;
             case "SJF":
-                // results = sjf.sjf(processes);
+                results = sjf.sjf(processes);
                 break;
             case "SRTF":
                 results = srtf.srtf(processes);
