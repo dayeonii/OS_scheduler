@@ -90,7 +90,7 @@ public class newScheduler {
                     waitingTimes.put(runningProcess.getPid(), waitTime);
                     System.out.println("프로세스 "+runningProcess.getPid()+"번이 완료됨");
                     //new_result에 (pid, 실행, 시작, 대기) 정보 추가
-                    new_result.add(new SchedulingResult( runningProcess.getPid(), startTime, originBurstTime.get(runningProcess.getPid()), waitTime));
+                    new_result.add(new SchedulingResult( runningProcess.getPid(), startTime, originBurstTime.get(runningProcess.getPid()), waitTime, 0));
                     runningProcess = null;  //완료된 프로세스
                 }
             }
