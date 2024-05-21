@@ -73,10 +73,11 @@ public class newScheduler {
             if (runningProcess != null) {
                 System.out.println("현재 실행중 프로세스: " + runningProcess.getPid() + " | 남은 burstTime: " + runningProcess.getBurstTime());
                 runningProcess.setBurstTime(runningProcess.getBurstTime() - 1);
+                cpuTime++;
 
                 // 실행하다가 해당 프로세스가 완료되면 (burstTime==0) - 완료문구 출력후 cpu에서 내리고, result에 결과 추가
                 if (runningProcess.getBurstTime() == 0) {
-                    int waitTime = cpuTime - startTime;
+                    int waitTime = cpuTime - startTime - 1;
                     totalWaitingTime += waitTime;
                     System.out.println("프로세스 " + runningProcess.getPid() + "번이 완료됨");
                     // 여기에 result 추가
@@ -88,6 +89,8 @@ public class newScheduler {
                     readyQ.add(runningProcess);  // time slice가 끝나면 다시 readyQ에 추가
                     runningProcess = null;
                 }
+            } else {
+                cpuTime++;
             }
 
             // 모든 프로세스의 flag가 1이면, 다시 0으로 초기화 (다음 턴), 우선순위 랜덤재할당, readyQ에 다시 넣기
@@ -103,8 +106,6 @@ public class newScheduler {
                     }
                 }
             }
-
-            cpuTime++;
         }
 
         System.out.println("-----------------------------");
