@@ -83,10 +83,20 @@ public class Program extends JFrame {
     }
 
     public void rrPerformed(ActionEvent e) {
-        executeSchedulingAlgorithm("RR");
+        String timeSliceStr = JOptionPane.showInputDialog(this, "Time Slice:");
+        if (timeSliceStr != null) {
+            try {
+                int timeSlice = Integer.parseInt(timeSliceStr.trim());
+                executeSchedulingAlgorithm("RR", timeSlice);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "유효한 숫자를 입력하세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
-    private void executeSchedulingAlgorithm(String algorithm) {
+
+
+    private void executeSchedulingAlgorithm(String algorithm,int timeSlice) {
         int rowCount = model1.getRowCount();
         ArrayList<process> processes = new ArrayList<>();
         for (int i = 0; i < rowCount; i++) {
@@ -114,8 +124,12 @@ public class Program extends JFrame {
                 results = srtf.srtf(processes);
                 break;
             case "RR":
-                // results = roundrobin.rr(processes);
+                 results = roundrobin.roundrobin(processes,timeSlice);
                 break;
+            default:
+                // 다른 스케줄러에 대한 처리 추가
+                break;
+
         }
 
         for (SchedulingResult result : results) {
@@ -124,6 +138,27 @@ public class Program extends JFrame {
         ganttChartPanel.repaint();
         displayResults(results);
     }
+
+    private void executeSchedulingAlgorithm(String algorithm) {
+        int timeSlice = 0; // 기본값 설정
+        switch (algorithm) {
+            case "RR":
+                String timeSliceStr = JOptionPane.showInputDialog(this, "Time Slice:");
+                if (timeSliceStr != null) {
+                    try {
+                        timeSlice = Integer.parseInt(timeSliceStr.trim());
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(this, "유효한 숫자를 입력하세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                break;
+            default:
+                // 다른 스케줄러의 경우 timeSlice 값을 사용하지 않으므로 0으로 설정
+                break;
+        }
+        executeSchedulingAlgorithm(algorithm, timeSlice);
+    }
+
 
     private void displayResults(List<SchedulingResult> results) {
         model2.setRowCount(0);
