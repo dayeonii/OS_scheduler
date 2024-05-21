@@ -5,6 +5,7 @@ import sjf.*;
 import srtf.*;
 import roundrobin.*;
 import newScheduler.*;
+import result.SchedulingResult;///이거 추가!
 import java.util.*;
 public class Main {
     public static void main(String[] args) {
@@ -30,14 +31,17 @@ public class Main {
 
         //sjf 함수 테스트
         sjf.sjf(PCB_list);
-        //sjf 실행 후 원본 프로세스들 변경되었는지 확인 -> 깊은복사로 해결
-        //System.out.println("p1의 정보\n"+p1);
 
         //srtf 함수 테스트
         srtf.srtf(PCB_list);
 
-        //round robin 함수 테스트
-        roundrobin.roundrobin();
+        //timeSlice 입력
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("timeSlice: ");
+        int timeSlice = scanner.nextInt();
+
+        // Round Robin 함수 테스트
+        List<SchedulingResult> rrResults = roundrobin.roundrobin(PCB_list, timeSlice);
 
         //신규정책 함수 테스트
         newScheduler.newScheduler(PCB_list);
