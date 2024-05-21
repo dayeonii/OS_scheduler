@@ -29,6 +29,8 @@ public class Program extends JFrame {
     private JButton rrBtn;
     private GanttChartPanel ganttChartPanel;
 
+    private TextField timesliceInput;
+
     private DefaultTableModel model1;
     private DefaultTableModel model2;
 
@@ -67,26 +69,42 @@ public class Program extends JFrame {
     }
 
     public void fcfsPerformed(ActionEvent e) {
-        executeSchedulingAlgorithm("FCFS");
+        executeSchedulingAlgorithm("FCFS", 0);
     }
 
     public void newSchedulerPerformed(ActionEvent e) {
-        executeSchedulingAlgorithm("NewScheduler");
+        int timeslice = timesliceInput();
+        if (timeslice > 0) {
+            executeSchedulingAlgorithm("NewScheduler", timeslice);
+        }
     }
 
     public void sjfPerformed(ActionEvent e) {
-        executeSchedulingAlgorithm("SJF");
+        executeSchedulingAlgorithm("SJF", 0);
     }
 
     public void srtfPerformed(ActionEvent e) {
-        executeSchedulingAlgorithm("SRTF");
+        executeSchedulingAlgorithm("SRTF", 0);
     }
 
     public void rrPerformed(ActionEvent e) {
-        executeSchedulingAlgorithm("RR");
+        int timeslice = timesliceInput();
+        if (timeslice > 0) {
+            executeSchedulingAlgorithm("RR", timeslice);
+        }
     }
 
-    private void executeSchedulingAlgorithm(String algorithm) {
+    private int timesliceInput() {
+        String input = JOptionPane.showInputDialog(this, "타임슬라이스를 입력하세요:", "타임슬라이스 입력", JOptionPane.PLAIN_MESSAGE);
+        try {
+            return Integer.parseInt(input.trim());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "유효한 숫자를 입력하세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+            return -1;
+        }
+    }
+
+    private void executeSchedulingAlgorithm(String algorithm, int timeslice) {
         int rowCount = model1.getRowCount();
         ArrayList<process> processes = new ArrayList<>();
         for (int i = 0; i < rowCount; i++) {
@@ -105,7 +123,7 @@ public class Program extends JFrame {
                 // results = fcfs.fcfs(processes);
                 break;
             case "NewScheduler":
-                // results = newScheduler.newScheduler(processes);
+                // results = newScheduler.newScheduler(processes, timeslice);
                 break;
             case "SJF":
                 results = sjf.sjf(processes);
@@ -114,7 +132,7 @@ public class Program extends JFrame {
                 results = srtf.srtf(processes);
                 break;
             case "RR":
-                // results = roundrobin.rr(processes);
+                // results = roundrobin.rr(processes, timeslice);
                 break;
         }
 
