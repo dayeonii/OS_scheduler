@@ -6,7 +6,7 @@ import result.SchedulingResult;
 import java.util.*;
 
 public class newScheduler {
-    public static ArrayList<SchedulingResult> newScheduler(ArrayList<process> PCB_list) {
+    public static ArrayList<SchedulingResult> newScheduler(ArrayList<process> PCB_list, int timeSlice) {
         System.out.println("Hello, I'm new Scheduler!");
 
         // PCB_list 복사본 생성 - 원본 변경 방지를 위함
@@ -14,8 +14,10 @@ public class newScheduler {
         for (process P : PCB_list) {
             copy_PCB.add((process) P.clone());
         }
+
         // 도착시간 순서대로 copy_PCB를 정렬
         Collections.sort(copy_PCB, Comparator.comparingInt(process::getArrivalTime));
+
         // 1번째 턴 하기 전에 랜덤 우선순위 할당
         randPriority(copy_PCB);
         System.out.println("첫번째 턴: " + copy_PCB);
@@ -40,7 +42,6 @@ public class newScheduler {
 
         // 필요한 객체들 선언 (cpuTime, totalWaitingTime, responseTime, startTime, runningProcess, waitingTimeList)
         int cpuTime = 0;
-        int timeSlice = 4;
         int totalWaitingTime = 0;   // 총 대기시간 (프로세스 개수로 나누면 avg)
         int startTime = 0;  // 해당 프로세스가 시작된 시간
         int responseTime = 0;   // 응답시간
@@ -86,7 +87,7 @@ public class newScheduler {
                     runningProcess = null;  // cpu에서 내리기
                 } else if (cpuTime - startTime == timeSlice) {    // timeSlice만큼 실행했으면 cpu에서 내리고 다음 프로세스 실행
                     System.out.println("timeslice만큼 실행된 " + runningProcess.getPid() + "번 | 남은 burst: " + runningProcess.getBurstTime());
-                    readyQ.add(runningProcess);  // time slice가 끝나면 다시 readyQ에 추가
+                    flag.put(runningProcess.getPid(), 1);   // 실행한건 flag 1 바꿔주기
                     runningProcess = null;
                 }
             } else {
@@ -94,9 +95,19 @@ public class newScheduler {
             }
 
             // 모든 프로세스의 flag가 1이면, 다시 0으로 초기화 (다음 턴), 우선순위 랜덤재할당, readyQ에 다시 넣기
-            if (flag.values().stream().allMatch(v -> v == 1)) {
-                for (Integer Pid : flag.keySet()) {
-                    flag.put(Pid, 0);
+            boolean allFlagsSet = true;
+            for (process P : copy_PCB) {
+                if (P.getBurstTime() > 0 && flag.get(P.getPid()) == 0) {
+                    allFlagsSet = false;
+                    break;
+                }
+            }
+
+            if (allFlagsSet) {
+                for (process P : copy_PCB) {
+                    if (P.getBurstTime() > 0) {
+                        flag.put(P.getPid(), 0); // 남아있는 프로세스의 flag만 0으로 초기화
+                    }
                 }
                 randPriority(copy_PCB); // 우선순위 재할당
                 System.out.println("모든 flag가 1이 됨 - 다음 턴: " + copy_PCB);

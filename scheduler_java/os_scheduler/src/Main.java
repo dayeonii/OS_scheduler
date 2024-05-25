@@ -44,7 +44,7 @@ public class Main {
         List<SchedulingResult> rrResults = roundrobin.roundrobin(PCB_list, timeSlice);
 
         //신규정책 함수 테스트
-        newScheduler.newScheduler(PCB_list);
+        newScheduler.newScheduler(PCB_list, timeSlice);
 
     }
 }
