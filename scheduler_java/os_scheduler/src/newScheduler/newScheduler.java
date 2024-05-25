@@ -5,6 +5,8 @@ import result.SchedulingResult;
 
 import java.util.*;
 
+import static java.util.Collections.min;
+
 public class newScheduler {
     public static ArrayList<SchedulingResult> newScheduler(ArrayList<process> PCB_list, int timeSlice) {
         System.out.println("Hello, I'm new Scheduler!");
@@ -43,8 +45,9 @@ public class newScheduler {
         // 필요한 객체들 선언 (cpuTime, totalWaitingTime, responseTime, startTime, runningProcess, waitingTimeList)
         int cpuTime = 0;
         int totalWaitingTime = 0;   // 총 대기시간 (프로세스 개수로 나누면 avg)
+        int totalExecutedTime = 0;  // 총 실행시간
         int startTime = 0;  // 해당 프로세스가 시작된 시간
-        int responseTime = 0;   // 응답시간
+        int responseTime = 0;   // 응답시간 (첫 시작된)
         process runningProcess = null;  // 현재 실행중인 프로세스
 
         // 지금부터 모든 프로세스가 완료될 때 까지 반복
@@ -81,8 +84,10 @@ public class newScheduler {
                     int waitTime = cpuTime - startTime - 1;
                     totalWaitingTime += waitTime;
                     System.out.println("프로세스 " + runningProcess.getPid() + "번이 완료됨");
+
                     // 여기에 result 추가
-                    new_result.add(new SchedulingResult(runningProcess.getPid(), startTime, originBurstTime.get(runningProcess.getPid()), waitTime, responseTime));
+                    new_result.add(new SchedulingResult(runningProcess.getPid(), startTime, cpuTime-startTime, waitTime, responseTime));
+
                     flag.put(runningProcess.getPid(), 1);   // 실행한건 flag 1 바꿔주기
                     runningProcess = null;  // cpu에서 내리기
                 } else if (cpuTime - startTime == timeSlice) {    // timeSlice만큼 실행했으면 cpu에서 내리고 다음 프로세스 실행

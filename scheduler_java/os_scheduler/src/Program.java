@@ -71,7 +71,16 @@ public class Program extends JFrame {
     }
 
     public void newSchedulerPerformed(ActionEvent e) {
-        executeSchedulingAlgorithm("NewScheduler");
+        String timeSliceStr = JOptionPane.showInputDialog(this, "Time Slice:");
+        if (timeSliceStr != null) {
+            try {
+                int timeSlice = Integer.parseInt(timeSliceStr.trim());
+                executeSchedulingAlgorithm("NewScheduler", timeSlice);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "유효한 숫자를 입력하세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        //executeSchedulingAlgorithm("NewScheduler");
     }
 
     public void sjfPerformed(ActionEvent e) {
@@ -115,7 +124,7 @@ public class Program extends JFrame {
                 // results = fcfs.fcfs(processes);
                 break;
             case "NewScheduler":
-                // results = newScheduler.newScheduler(processes);
+                results = newScheduler.newScheduler(processes, timeSlice);
                 break;
             case "SJF":
                 results = sjf.sjf(processes);
@@ -139,11 +148,24 @@ public class Program extends JFrame {
         displayResults(results);
     }
 
+    String timeSliceStr;
     private void executeSchedulingAlgorithm(String algorithm) {
         int timeSlice = 0; // 기본값 설정
         switch (algorithm) {
             case "RR":
-                String timeSliceStr = JOptionPane.showInputDialog(this, "Time Slice:");
+                //String timeSliceStr = JOptionPane.showInputDialog(this, "Time Slice:");
+                timeSliceStr = JOptionPane.showInputDialog(this, "Time Slice:");
+                if (timeSliceStr != null) {
+                    try {
+                        timeSlice = Integer.parseInt(timeSliceStr.trim());
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(this, "유효한 숫자를 입력하세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                break;
+            case "NewScheduler":
+                //String timeSliceStr = JOptionPane.showInputDialog(this, "Time Slice:");
+                timeSliceStr = JOptionPane.showInputDialog(this, "Time Slice:");
                 if (timeSliceStr != null) {
                     try {
                         timeSlice = Integer.parseInt(timeSliceStr.trim());
