@@ -100,8 +100,4 @@ public class sjf {
         System.out.println("----------------------------");
         return sjf_result;
     }
-
-    private void getOriginBurstTime(){
-
-    }
 }

@@ -121,7 +121,7 @@ public class Program extends JFrame {
 
         switch (algorithm) {
             case "FCFS":
-                // results = fcfs.fcfs(processes);
+                results = fcfs.fcfs(processes);
                 break;
             case "NewScheduler":
                 results = newScheduler.newScheduler(processes, timeSlice);
