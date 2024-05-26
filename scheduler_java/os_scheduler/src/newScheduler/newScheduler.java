@@ -54,6 +54,12 @@ public class newScheduler {
         boolean[] firstExecuted = new boolean[copy_PCB.size()]; // 각 프로세스의 첫 실행 여부를 저장하는 배열
         int[] responseTimes = new int[copy_PCB.size()]; // 각 프로세스의 첫 실행시간을 저장 - 간트차트 표기를 위함
 
+        // 프로세스별 마지막으로 실행 완료됐던 시간? 앞서 실행됐던...
+        HashMap<Integer, Integer> lastExecutedTime = new HashMap<>();
+        for (process P : copy_PCB) {
+            lastExecutedTime.put(P.getPid(), P.getArrivalTime());   // 초기값으로 도착 시간 설정
+        }
+
         // 지금부터 모든 프로세스가 완료될 때 까지 반복
         while (!isAllCompleted(copy_PCB) || !readyQ.isEmpty() || runningProcess != null) {
             // 도착시간에 따라서 readyQ에 프로세스 넣기
@@ -93,17 +99,19 @@ public class newScheduler {
                 // 실행하다가 해당 프로세스가 완료되면 (burstTime==0) - 완료문구 출력후 cpu에서 내리고, result에 결과 추가
                 if (runningProcess.getBurstTime() == 0) {
                 	//실행 프로세스 기록
-                    waitTime = cpuTime - startTime - 1;
+                    waitTime = startTime - lastExecutedTime.get(runningProcess.getPid());
+                    lastExecutedTime.put(runningProcess.getPid(), cpuTime);
                     totalWaitingTime += waitTime;
                     System.out.println("프로세스 " + runningProcess.getPid() + "번이 완료됨");
 
                     // 여기에 result 추가
-                    new_result.add(new SchedulingResult(runningProcess.getPid(), startTime, cpuTime-startTime, totalWaitingTime, responseTimes[runningProcess.getPid()-1]));
+                    new_result.add(new SchedulingResult(runningProcess.getPid(), startTime, cpuTime-startTime, waitTime, responseTimes[runningProcess.getPid()-1]));
 
                     flag.put(runningProcess.getPid(), 1);   // 실행한건 flag 1 바꿔주기
                     runningProcess = null;  // cpu에서 내리기
                 } else if (cpuTime - startTime == timeSlice) {    // timeSlice만큼 실행했으면 cpu에서 내리고 다음 프로세스 실행
-                	waitTime = cpuTime - startTime - 1;
+                    waitTime = startTime - lastExecutedTime.get(runningProcess.getPid());
+                    lastExecutedTime.put(runningProcess.getPid(), cpuTime);
                     totalWaitingTime += waitTime;
                     new_result.add(new SchedulingResult(runningProcess.getPid(), startTime, cpuTime-startTime, waitTime, responseTimes[runningProcess.getPid()-1]));
                     System.out.println("timeslice만큼 실행된 " + runningProcess.getPid() + "번 | 남은 burst: " + runningProcess.getBurstTime());
