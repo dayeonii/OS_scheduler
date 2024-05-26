@@ -181,7 +181,7 @@ public class Program extends JFrame {
         executeSchedulingAlgorithm(algorithm, timeSlice);
     }
 
-
+    /*
     private void displayResults(List<SchedulingResult> results) {
         model2.setRowCount(0);
 
@@ -226,7 +226,29 @@ public class Program extends JFrame {
 
         totalExecutionTimeLabel.setText("전체 실행시간: " + totalExecutionTime);
         averageWaitingTimeLabel.setText("평균 대기시간: " + String.format("%.2f", averageWaitingTime));
+    } */
+
+    private void displayResults(List<SchedulingResult> results) {
+        model2.setRowCount(0);
+
+        if (results.isEmpty()) return;
+
+        int totalExecutionTime = 0;
+        int totalWaitingTime = 0;
+
+        for (SchedulingResult result : results) {
+            model2.addRow(new Object[]{"P" + result.getPid(), result.getDuration(), result.getWaitingTime(), result.getResponseTime()});
+            totalExecutionTime = Math.max(totalExecutionTime, result.getStartTime() + result.getDuration());
+            totalWaitingTime += result.getWaitingTime();
+        }
+
+        int processCount = results.size();
+        double averageWaitingTime = processCount > 0 ? (double) totalWaitingTime / processCount : 0;
+
+        totalExecutionTimeLabel.setText("전체 실행시간: " + totalExecutionTime);
+        averageWaitingTimeLabel.setText("평균 대기시간: " + String.format("%.2f", averageWaitingTime));
     }
+
 
     class GanttChartPanel extends JPanel {
         private ArrayList<ProcessBlock> processes;
@@ -235,6 +257,8 @@ public class Program extends JFrame {
             this.processes = new ArrayList<>();
         }
 
+        // 병합되는 부분 수정!!
+        /*
         public void addProcess(String name, int startTime, int duration) {
             if (!processes.isEmpty()) {
                 ProcessBlock lastBlock = processes.get(processes.size() - 1);
@@ -246,6 +270,11 @@ public class Program extends JFrame {
             }
             this.processes.add(new ProcessBlock(name, startTime, duration));
         }
+        */
+        public void addProcess(String name, int startTime, int duration) {
+            this.processes.add(new ProcessBlock(name, startTime, duration));
+        }
+
 
         public void clearProcesses() {
             this.processes.clear();
