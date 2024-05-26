@@ -60,19 +60,26 @@ public class srtf {
                 System.out.println("시간 " + currentTime + ": 프로세스 " + currentProcessState.process.getPid() + " 실행");
 
                 // 결과 리스트에 추가 (연속된 실행 시간 병합)
-                if (lastProcess != null && lastProcess.process.getPid() == currentProcessState.process.getPid() && currentProcessState.startTime == lastProcess.startTime + lastProcess.duration) {
+                if (lastProcess != null && lastProcess.process.getPid() == currentProcessState.process.getPid()) {
                     lastProcess.duration += 1;
                 } else {
+                    if (lastProcess != null) {
+                        results.add(new SchedulingResult(lastProcess.process.getPid(), lastProcess.startTime, lastProcess.duration, lastProcess.waitingTime, lastProcess.responseTime));
+                    }
                     lastProcess = new ProcessState(currentProcessState.process, currentProcessState.index, currentProcessState.remainingTime);
                     lastProcess.startTime = currentTime;
                     lastProcess.duration = 1;
-                    results.add(new SchedulingResult(currentProcessState.process.getPid(), lastProcess.startTime, lastProcess.duration, currentProcessState.waitingTime, currentProcessState.responseTime));
+                    lastProcess.waitingTime = currentProcessState.waitingTime;
+                    lastProcess.responseTime = currentProcessState.responseTime;
                 }
 
                 // 프로세스가 완료되었는지 확인
                 if (currentProcessState.remainingTime == 0) {
                     completedProcesses++; // 완료된 프로세스 수 증가
                     System.out.println("시간 " + (currentTime + 1) + ": 프로세스 " + currentProcessState.process.getPid() + " 완료");
+                    // 프로세스 완료시 결과 리스트에 추가
+                    results.add(new SchedulingResult(currentProcessState.process.getPid(), lastProcess.startTime, lastProcess.duration, currentProcessState.waitingTime, currentProcessState.responseTime));
+                    lastProcess = null;
                 } else {
                     // 프로세스가 완료되지 않았다면 다시 큐에 추가
                     queue.add(currentProcessState);
