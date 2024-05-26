@@ -48,6 +48,7 @@ public class newScheduler {
         int totalExecutedTime = 0;  // 총 실행시간
         int startTime = 0;  // 해당 프로세스가 시작된 시간
         int responseTime = 0;   // 응답시간 (첫 시작된)
+        int waitTime = 0; //대기시간
         process runningProcess = null;  // 현재 실행중인 프로세스
 
         // 지금부터 모든 프로세스가 완료될 때 까지 반복
@@ -78,10 +79,11 @@ public class newScheduler {
                 System.out.println("현재 실행중 프로세스: " + runningProcess.getPid() + " | 남은 burstTime: " + runningProcess.getBurstTime());
                 runningProcess.setBurstTime(runningProcess.getBurstTime() - 1);
                 cpuTime++;
-
+                
                 // 실행하다가 해당 프로세스가 완료되면 (burstTime==0) - 완료문구 출력후 cpu에서 내리고, result에 결과 추가
                 if (runningProcess.getBurstTime() == 0) {
-                    int waitTime = cpuTime - startTime - 1;
+                	//실행 프로세스 기록
+                    waitTime = cpuTime - startTime - 1;
                     totalWaitingTime += waitTime;
                     System.out.println("프로세스 " + runningProcess.getPid() + "번이 완료됨");
 
@@ -91,8 +93,12 @@ public class newScheduler {
                     flag.put(runningProcess.getPid(), 1);   // 실행한건 flag 1 바꿔주기
                     runningProcess = null;  // cpu에서 내리기
                 } else if (cpuTime - startTime == timeSlice) {    // timeSlice만큼 실행했으면 cpu에서 내리고 다음 프로세스 실행
+                	waitTime = cpuTime - startTime - 1;
+                    totalWaitingTime += waitTime;
+                    new_result.add(new SchedulingResult(runningProcess.getPid(), startTime, cpuTime-startTime, waitTime, responseTime));
                     System.out.println("timeslice만큼 실행된 " + runningProcess.getPid() + "번 | 남은 burst: " + runningProcess.getBurstTime());
-                    flag.put(runningProcess.getPid(), 1);   // 실행한건 flag 1 바꿔주기
+                    flag.put(runningProcess.getPid(), 1);   // 실행한건 flag 1 바꿔주기 
+                  
                     runningProcess = null;
                 }
             } else {
