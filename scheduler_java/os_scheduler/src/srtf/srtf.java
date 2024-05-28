@@ -18,7 +18,7 @@ public class srtf {
         // 실행 대기열을 관리할 우선순위 큐 (남은 실행 시간이 짧은 순으로 정렬)
         PriorityQueue<ProcessState> queue = new PriorityQueue<>(Comparator.comparingInt(p -> p.remainingTime));
 
-        int currentTime = 0; // 시뮬레이션 시간
+        int cpuTime = 0; // 시뮬레이션 시간
         int completedProcesses = 0; // 완료된 프로세스 수
         int index = 0; // 현재 프로세스 리스트의 인덱스
 
@@ -36,7 +36,7 @@ public class srtf {
 
         while (completedProcesses < processes.size()) {
             // 현재 시간에 도착하는 프로세스를 실행 대기열에 추가
-            while (index < processes.size() && processes.get(index).getArrivalTime() <= currentTime) {
+            while (index < processes.size() && processes.get(index).getArrivalTime() <= cpuTime) {
                 queue.add(processStates.get(index));
                 index++;
             }
@@ -47,17 +47,17 @@ public class srtf {
                 // 대기 시간 갱신
                 if (currentProcessState.remainingTime == currentProcessState.process.getBurstTime()) {
                     // 처음 시작할 때 대기 시간
-                    currentProcessState.waitingTime = currentTime - currentProcessState.process.getArrivalTime();
+                    currentProcessState.waitingTime = cpuTime - currentProcessState.process.getArrivalTime();
                     // 응답 시간 설정
-                    currentProcessState.responseTime = currentTime - currentProcessState.process.getArrivalTime();
+                    currentProcessState.responseTime = cpuTime - currentProcessState.process.getArrivalTime();
                 } else {
                     // 선점 이후 다시 시작할 때 대기 시간
-                    currentProcessState.waitingTime += (currentTime - lastExecutedTime[currentProcessState.index]);
+                    currentProcessState.waitingTime += (cpuTime - lastExecutedTime[currentProcessState.index]);
                 }
 
                 // 현재 프로세스 실행 (1단위 시간만큼 실행)
                 currentProcessState.remainingTime--;
-                System.out.println("시간 " + currentTime + ": 프로세스 " + currentProcessState.process.getPid() + " 실행");
+                System.out.println("시간 " + cpuTime + ": 프로세스 " + currentProcessState.process.getPid() + " 실행");
 
                 // 결과 리스트에 추가 (연속된 실행 시간 병합)
                 if (lastProcess != null && lastProcess.process.getPid() == currentProcessState.process.getPid()) {
@@ -67,16 +67,16 @@ public class srtf {
                         results.add(new SchedulingResult(lastProcess.process.getPid(), lastProcess.startTime, lastProcess.duration, lastProcess.waitingTime, lastProcess.responseTime));
                     }
                     lastProcess = new ProcessState(currentProcessState.process, currentProcessState.index, currentProcessState.remainingTime);
-                    lastProcess.startTime = currentTime;
+                    lastProcess.startTime = cpuTime;
                     lastProcess.duration = 1;
                     lastProcess.waitingTime = currentProcessState.waitingTime;
                     lastProcess.responseTime = currentProcessState.responseTime;
-                }
+                } 
 
                 // 프로세스가 완료되었는지 확인
                 if (currentProcessState.remainingTime == 0) {
                     completedProcesses++; // 완료된 프로세스 수 증가
-                    System.out.println("시간 " + (currentTime + 1) + ": 프로세스 " + currentProcessState.process.getPid() + " 완료");
+                    System.out.println("시간 " + (cpuTime + 1) + ": 프로세스 " + currentProcessState.process.getPid() + " 완료");
                     // 프로세스 완료시 결과 리스트에 추가
                     results.add(new SchedulingResult(currentProcessState.process.getPid(), lastProcess.startTime, lastProcess.duration, currentProcessState.waitingTime, currentProcessState.responseTime));
                     lastProcess = null;
@@ -86,11 +86,11 @@ public class srtf {
                 }
 
                 // 마지막 실행 시간을 갱신
-                lastExecutedTime[currentProcessState.index] = currentTime + 1;
+                lastExecutedTime[currentProcessState.index] = cpuTime+ 1;
             }
 
             // 시간 1단위 증가
-            currentTime++;
+            cpuTime++;
         }
         System.out.println("----------------------------");
 
