@@ -71,7 +71,7 @@ public class srtf {
                     lastProcess.duration = 1;
                     lastProcess.waitingTime = currentProcessState.waitingTime;
                     lastProcess.responseTime = currentProcessState.responseTime;
-                } 
+                }
 
                 // 프로세스가 완료되었는지 확인
                 if (currentProcessState.remainingTime == 0) {

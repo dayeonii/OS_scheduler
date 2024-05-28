@@ -47,6 +47,8 @@ public class Program extends JFrame {
         }
     }
 
+    int pCount = 0;
+
     private void readProcessDataFromFile(File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
@@ -59,6 +61,7 @@ public class Program extends JFrame {
                     int duration = Integer.parseInt(parts[2].trim());
                     int priority = Integer.parseInt(parts[3].trim());
                     model1.addRow(new Object[]{pid, arrivalTime, duration, priority});
+                    pCount++;
                 }
             }
         } catch (IOException e) {
@@ -242,8 +245,9 @@ public class Program extends JFrame {
             totalWaitingTime += result.getWaitingTime();
         }
 
-        int processCount = results.size();
-        double averageWaitingTime = processCount > 0 ? (double) totalWaitingTime / processCount : 0;
+        //int processCount = results.size();
+        //double averageWaitingTime = processCount > 0 ? (double) totalWaitingTime / processCount : 0;
+        double averageWaitingTime = (double)totalWaitingTime/pCount;
 
         totalExecutionTimeLabel.setText("전체 실행시간: " + totalExecutionTime);
         averageWaitingTimeLabel.setText("평균 대기시간: " + String.format("%.2f", averageWaitingTime));
