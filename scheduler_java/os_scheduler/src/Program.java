@@ -47,7 +47,7 @@ public class Program extends JFrame {
         }
     }
 
-    int pCount = 0;
+    static int pCount = 0;
 
     private void readProcessDataFromFile(File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
