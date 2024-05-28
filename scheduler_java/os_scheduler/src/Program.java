@@ -47,7 +47,7 @@ public class Program extends JFrame {
         }
     }
 
-    static int pCount = 0;
+    //int pCount = 0;
 
     private void readProcessDataFromFile(File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -61,7 +61,7 @@ public class Program extends JFrame {
                     int duration = Integer.parseInt(parts[2].trim());
                     int priority = Integer.parseInt(parts[3].trim());
                     model1.addRow(new Object[]{pid, arrivalTime, duration, priority});
-                    pCount++;
+                    //pCount++;
                 }
             }
         } catch (IOException e) {
@@ -106,8 +106,8 @@ public class Program extends JFrame {
         }
     }
 
-
-
+    //프로세스 개수
+    int pCount = 0;
     private void executeSchedulingAlgorithm(String algorithm,int timeSlice) {
         int rowCount = model1.getRowCount();
         ArrayList<process> processes = new ArrayList<>();
@@ -118,6 +118,7 @@ public class Program extends JFrame {
             int priority = (int) model1.getValueAt(i, 3);
             processes.add(new process(pid, arrivalTime, duration, priority));
         }
+        pCount = processes.size();
 
         ganttChartPanel.clearProcesses();
         List<SchedulingResult> results = new ArrayList<>();
